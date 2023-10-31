@@ -1,20 +1,38 @@
 pipeline {
     agent any
+
     stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/your/repo.git'
+            }
+        }
+
         stage('Build') {
             steps {
-               echo "hello"
+                sh 'mvn clean package'
             }
         }
+
         stage('Test') {
             steps {
-                echo"ello"
+                sh 'mvn test'
             }
         }
+
         stage('Deploy') {
             steps {
-                echo "deploy"
+                sh 'cp -r /path/to/build/* /var/www/html'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful'
+        }
+        failure {
+            echo 'Deployment failed'
         }
     }
 }
